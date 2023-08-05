@@ -1,12 +1,14 @@
-export interface DbItem {
-  // sketch out interface here
+export interface Task {
+  title: string;
+  description: string;
+  status: "done" | "not done" | "in progress"
 }
 
-export interface DbItemWithId extends DbItem {
+export interface TaskWithId extends Task {
   id: number;
 }
 
-const db: DbItemWithId[] = [];
+const db: TaskWithId[] = [];
 
 /** Variable to keep incrementing id of database items */
 let idCounter = 0;
@@ -17,11 +19,13 @@ let idCounter = 0;
  * @param n - the number of items to generate
  * @returns the created items
  */
-export const addDummyDbItems = (n: number): DbItemWithId[] => {
-  const createdSignatures: DbItemWithId[] = [];
+export const addDummyTasks = (n: number): TaskWithId[] => {
+  const createdSignatures: TaskWithId[] = [];
   for (let count = 0; count < n; count++) {
-    const createdSignature = addDbItem({
-      // possibly add some generated data here
+    const createdSignature = addTask({
+      title: "Lorem ipsum",
+      description: "Lorem ipsum dolor sit amet",
+      status: "not done"
     });
     createdSignatures.push(createdSignature);
   }
@@ -34,8 +38,8 @@ export const addDummyDbItems = (n: number): DbItemWithId[] => {
  * @param data - the item data to insert in
  * @returns the item added (with a newly created id)
  */
-export const addDbItem = (data: DbItem): DbItemWithId => {
-  const newEntry: DbItemWithId = {
+export const addTask = (data: Task): TaskWithId => {
+  const newEntry: TaskWithId = {
     id: ++idCounter,
     ...data,
   };
@@ -50,10 +54,10 @@ export const addDbItem = (data: DbItem): DbItemWithId => {
  * @returns the deleted database item (if originally located),
  *  otherwise the string `"not found"`
  */
-export const deleteDbItemById = (id: number): DbItemWithId | "not found" => {
-  const idxToDeleteAt = findIndexOfDbItemById(id);
+export const deleteTaskById = (id: number): TaskWithId | "not found" => {
+  const idxToDeleteAt = findIndexOfTaskById(id);
   if (typeof idxToDeleteAt === "number") {
-    const itemToDelete = getDbItemById(id);
+    const itemToDelete = getTaskById(id);
     db.splice(idxToDeleteAt, 1); // .splice can delete from an array
     return itemToDelete;
   } else {
@@ -68,7 +72,7 @@ export const deleteDbItemById = (id: number): DbItemWithId | "not found" => {
  * @returns the index of the matching database item,
  *  otherwise the string `"not found"`
  */
-const findIndexOfDbItemById = (id: number): number | "not found" => {
+const findIndexOfTaskById = (id: number): number | "not found" => {
   const matchingIdx = db.findIndex((entry) => entry.id === id);
   // .findIndex returns -1 if not located
   if (matchingIdx !== -1) {
@@ -82,7 +86,7 @@ const findIndexOfDbItemById = (id: number): number | "not found" => {
  * Find all database items
  * @returns all database items from the database
  */
-export const getAllDbItems = (): DbItemWithId[] => {
+export const getAllTasks = (): TaskWithId[] => {
   return db;
 };
 
@@ -93,7 +97,7 @@ export const getAllDbItems = (): DbItemWithId[] => {
  * @returns the located database item (if found),
  *  otherwise the string `"not found"`
  */
-export const getDbItemById = (id: number): DbItemWithId | "not found" => {
+export const getTaskById = (id: number): TaskWithId | "not found" => {
   const maybeEntry = db.find((entry) => entry.id === id);
   if (maybeEntry) {
     return maybeEntry;
@@ -111,11 +115,11 @@ export const getDbItemById = (id: number): DbItemWithId | "not found" => {
  * @returns the updated database item (if one is located),
  *  otherwise the string `"not found"`
  */
-export const updateDbItemById = (
+export const updateTaskById = (
   id: number,
-  newData: Partial<DbItem>
-): DbItemWithId | "not found" => {
-  const idxOfEntry = findIndexOfDbItemById(id);
+  newData: Partial<Task>
+): TaskWithId | "not found" => {
+  const idxOfEntry = findIndexOfTaskById(id);
   // type guard against "not found"
   if (typeof idxOfEntry === "number") {
     return Object.assign(db[idxOfEntry], newData);

@@ -2,18 +2,19 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import {
-  addDummyDbItems,
-  addDbItem,
-  getAllDbItems,
-  getDbItemById,
-  DbItem,
-  updateDbItemById,
+  addDummyTasks,
+  addTask,
+  deleteTaskById,
+  getAllTasks,
+  getTaskById,
+  Task,
+  updateTaskById,
 } from "./db";
 import filePath from "./filePath";
 
-// loading in some dummy items into the database
+// loading in some dummy tasks into the database
 // (comment out if desired, or change the number)
-addDummyDbItems(20);
+addDummyTasks(3);
 
 const app = express();
 
@@ -34,24 +35,24 @@ app.get("/", (req, res) => {
   res.sendFile(pathToFile);
 });
 
-// GET /items
-app.get("/items", (req, res) => {
-  const allSignatures = getAllDbItems();
+// GET /tasks
+app.get("/tasks", (req, res) => {
+  const allSignatures = getAllTasks();
   res.status(200).json(allSignatures);
 });
 
-// POST /items
-app.post<{}, {}, DbItem>("/items", (req, res) => {
+// POST /tasks
+app.post<{}, {}, Task>("/tasks", (req, res) => {
   // to be rigorous, ought to handle non-conforming request bodies
   // ... but omitting this as a simplification
   const postData = req.body;
-  const createdSignature = addDbItem(postData);
+  const createdSignature = addTask(postData);
   res.status(201).json(createdSignature);
 });
 
-// GET /items/:id
-app.get<{ id: string }>("/items/:id", (req, res) => {
-  const matchingSignature = getDbItemById(parseInt(req.params.id));
+// GET /tasks/:id
+app.get<{ id: string }>("/tasks/:id", (req, res) => {
+  const matchingSignature = getTaskById(parseInt(req.params.id));
   if (matchingSignature === "not found") {
     res.status(404).json(matchingSignature);
   } else {
@@ -59,9 +60,9 @@ app.get<{ id: string }>("/items/:id", (req, res) => {
   }
 });
 
-// DELETE /items/:id
-app.delete<{ id: string }>("/items/:id", (req, res) => {
-  const matchingSignature = getDbItemById(parseInt(req.params.id));
+// DELETE /tasks/:id
+app.delete<{ id: string }>("/tasks/:id", (req, res) => {
+  const matchingSignature = deleteTaskById(parseInt(req.params.id));
   if (matchingSignature === "not found") {
     res.status(404).json(matchingSignature);
   } else {
@@ -69,9 +70,9 @@ app.delete<{ id: string }>("/items/:id", (req, res) => {
   }
 });
 
-// PATCH /items/:id
-app.patch<{ id: string }, {}, Partial<DbItem>>("/items/:id", (req, res) => {
-  const matchingSignature = updateDbItemById(parseInt(req.params.id), req.body);
+// PATCH /tasks/:id
+app.patch<{ id: string }, {}, Partial<Task>>("/tasks/:id", (req, res) => {
+  const matchingSignature = updateTaskById(parseInt(req.params.id), req.body);
   if (matchingSignature === "not found") {
     res.status(404).json(matchingSignature);
   } else {
