@@ -14,7 +14,7 @@ import filePath from "./filePath";
 
 // loading in some dummy tasks into the database
 // (comment out if desired, or change the number)
-addDummyTasks(3);
+addDummyTasks(0);
 
 const app = express();
 

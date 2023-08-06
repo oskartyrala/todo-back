@@ -6,6 +6,7 @@ export interface Task {
 
 export interface TaskWithId extends Task {
   id: number;
+  created: Date;
 }
 
 const db: TaskWithId[] = [];
@@ -41,6 +42,7 @@ export const addDummyTasks = (n: number): TaskWithId[] => {
 export const addTask = (data: Task): TaskWithId => {
   const newEntry: TaskWithId = {
     id: ++idCounter,
+    created: new Date(),
     ...data,
   };
   db.push(newEntry);
