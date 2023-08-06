@@ -1,7 +1,7 @@
 export interface Task {
   title: string;
   description: string;
-  status: "done" | "not done" | "in progress"
+  status: "done" | "not done" | "in progress";
 }
 
 export interface TaskWithId extends Task {
@@ -25,7 +25,7 @@ export const addDummyTasks = (n: number): TaskWithId[] => {
     const createdSignature = addTask({
       title: "Lorem ipsum",
       description: "Lorem ipsum dolor sit amet",
-      status: "not done"
+      status: "not done",
     });
     createdSignatures.push(createdSignature);
   }
